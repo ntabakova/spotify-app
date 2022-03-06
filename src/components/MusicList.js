@@ -1,7 +1,7 @@
 import { List } from "antd";
 import { formatText } from "../helpers/helpers";
 
-const AllMusicList = ({ results }) => {
+const MusicList = ({ results }) => {
   return (
     <List
       itemLayout="horizontal"
@@ -24,4 +24,4 @@ const AllMusicList = ({ results }) => {
   );
 };
 
-export default AllMusicList;
+export default MusicList;

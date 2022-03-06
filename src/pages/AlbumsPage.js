@@ -5,7 +5,7 @@ import AppPagination from "../components/AppPagination";
 import { Row, Col } from "antd";
 import fetchData from "../requests/requests";
 
-const AllMusicPage = (props) => {
+const AlbumsPage = (props) => {
   const [results, setResults] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
@@ -13,12 +13,11 @@ const AllMusicPage = (props) => {
 
   const params = useParams();
   const { id, name } = params;
-  const url = `https://api.spotify.com/v1/artists/${id}/albums?limit=10&offset=${currentPage}`;
+  const url = `https://api.spotify.com/v1/artists/${id}/albums?limit=10&offset=${currentPage}&include_groups=album`;
 
   useEffect(() => {
     setIsLoading(true);
     fetchData(url).then((response) => {
-      console.log(response);
       setResults(response.items);
       setTotalCount(response.total);
       setIsLoading(false);
@@ -31,7 +30,7 @@ const AllMusicPage = (props) => {
 
   return (
     <>
-      <h2 className="title">All music by {name}:</h2>
+      <h2 className="title">Albums by {name}:</h2>
       <Row>
         <Col
           xs={{ span: 22, offset: 1 }}
@@ -39,7 +38,7 @@ const AllMusicPage = (props) => {
           md={{ span: 16, offset: 4 }}
           lg={{ span: 12, offset: 6 }}
         >
-          {isLoading && <p>Fetching music...</p>}
+          {isLoading && <p>Fetching albums...</p>}
           {!isLoading && <MusicList results={results} />}
 
           {!isLoading && totalCount > 10 && (
@@ -55,4 +54,4 @@ const AllMusicPage = (props) => {
   );
 };
 
-export default AllMusicPage;
+export default AlbumsPage;

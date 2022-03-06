@@ -1,10 +1,8 @@
+import qs from "qs";
 const axios = require("axios");
 var Buffer = require("buffer/").Buffer;
-import qs from "qs";
 
 const fetchData = async (url) => {
-  setIsLoading(true);
-
   // clientId & clientSecret should normally be not exposed here
   const clientId = "37ca67209d5d459091f55a8fcc0f34cc";
   const clientSecret = "77fceae630c547829395eda42975f6e3";
@@ -26,7 +24,7 @@ const fetchData = async (url) => {
       qs.stringify(data),
       headers
     );
-    console.log(response.data.access_token);
+
     token = response.data.access_token;
   } catch (error) {}
 
@@ -39,4 +37,4 @@ const fetchData = async (url) => {
   return response.data;
 };
 
-export default fetchData();
+export default fetchData;

@@ -10,7 +10,7 @@ const SearchList = ({ results }) => {
       renderItem={(artist) => (
         <List.Item
           actions={[
-            <Link to="/all-music" key="albums">
+            <Link to={`/artists/${artist.id}/${artist.name}/albums`} key="albums" target="_blank">
               See albums
             </Link>,
             <Link to={`/artists/${artist.id}/${artist.name}/music`} key="all-music" target="_blank">

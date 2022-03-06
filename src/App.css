@@ -1,8 +1,14 @@
-.ant-row,
 .pagination {
-  padding: 15px 0;
+  padding: 1rem 0;
+  text-align: center;
 }
 
-.pagination {
+.title {
   text-align: center;
+  margin-bottom: 0;
+  padding: 2rem 0 1rem 0;
+}
+
+.ant-row {
+  padding-bottom: 1.5rem;
 }
