@@ -1,31 +1,22 @@
+import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import qs from "qs";
-import { Row, Col } from "antd";
-import { Form, Input } from "antd";
-import SearchList from "../components/SearchList";
+import AllMusicList from "../components/AllMusicList";
 import AppPagination from "../components/AppPagination";
+import { Row, Col } from "antd";
+import styles from "./styles.module.css";
 
 const axios = require("axios");
 var Buffer = require("buffer/").Buffer;
 
-let initial = true;
+const AllMusicPage = (props) => {
+  const params = useParams();
+  const { id, name } = params;
 
-const SearchPage = () => {
-  const [searchText, setSearchText] = useState("");
   const [results, setResults] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-
-  const onSearch = (value) => {
-    setSearchText(value);
-    initial = false;
-    setCurrentPage(0);
-  };
-
-  const pageChangeHandler = (page) => {
-    setCurrentPage(page - 1);
-  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -52,12 +43,12 @@ const SearchPage = () => {
           qs.stringify(data),
           headers
         );
-
+        console.log(response.data.access_token);
         token = response.data.access_token;
       } catch (error) {}
 
       const response = await axios.get(
-        `https://api.spotify.com/v1/search?type=artist&q=${searchText}&limit=10&offset=${currentPage}`,
+        `https://api.spotify.com/v1/artists/${id}/albums?limit=10&offset=${currentPage}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -65,35 +56,21 @@ const SearchPage = () => {
         }
       );
 
-      setResults(response.data.artists.items);
-      setTotalCount(response.data.artists.total);
+      setResults(response.data.items);
+      setTotalCount(response.data.total);
       setIsLoading(false);
     };
 
-    if (searchText && searchText.length >= 3) {
-      fetchData();
-    }
-  }, [searchText, currentPage]);
+    fetchData();
+  }, [id, currentPage]);
+
+  const pageChangeHandler = (page) => {
+    setCurrentPage(page - 1);
+  };
 
   return (
     <>
-      <Row>
-        <Col
-          xs={{ span: 20, offset: 2 }}
-          sm={{ span: 16, offset: 4 }}
-          md={{ span: 12, offset: 6 }}
-          lg={{ span: 10, offset: 7 }}
-          xlg={{ span: 8, offset: 8 }}
-        >
-          <h1 className="mt-5 mb-3">Search artists:</h1>
-          <Form layout="vertical">
-            <Input.Search enterButton="Search" size="large" onSearch={onSearch} />
-            {searchText.length < 3 && !initial && (
-              <p className="mt-2">Please enter at least 3 characters</p>
-            )}
-          </Form>
-        </Col>
-      </Row>
+      <h2 className={styles.title}>All music by {name}:</h2>
       <Row>
         <Col
           xs={{ span: 22, offset: 1 }}
@@ -102,8 +79,8 @@ const SearchPage = () => {
           lg={{ span: 14, offset: 5 }}
           xlg={{ span: 10, offset: 7 }}
         >
-          {isLoading && <p>Fetching artists...</p>}
-          {!isLoading && !initial && <SearchList results={results} />}
+          {isLoading && <p>Fetching music...</p>}
+          {!isLoading && <AllMusicList results={results} />}
 
           {!isLoading && totalCount > 10 && (
             <AppPagination
@@ -118,4 +95,4 @@ const SearchPage = () => {
   );
 };
 
-export default SearchPage;
+export default AllMusicPage;
